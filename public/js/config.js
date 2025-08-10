@@ -1,17 +1,13 @@
-/* config.js - funções de exportar/importar/enviar/backup/exportarPDF
-   Compatível com o HTML que você forneceu.
-*/
+/* config.js - funções exportar/importar/enviar/backup/exportarPDF com Firebase Firestore */
 
 /* ---------- helpers ---------- */
 
-// formata data p/ nome de arquivo
 function nowStamp() {
     const d = new Date();
     const pad = n => String(n).padStart(2, '0');
     return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
 }
 
-// baixa um Blob com nome
 function downloadBlob(blob, filename) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -23,7 +19,6 @@ function downloadBlob(blob, filename) {
     setTimeout(() => URL.revokeObjectURL(url), 5000);
 }
 
-// calcula ganho pela fórmula (peso * 120 * 0.00011) - 80 quando vale = true
 function calcularGanho(viagem) {
     const peso = Number(viagem.peso) || 0;
     let ganho = peso * 120 * 0.00011;
@@ -33,7 +28,6 @@ function calcularGanho(viagem) {
     return ganho > 0 ? ganho : 0;
 }
 
-// tenta converter texto booleano em booleano
 function parseBoolean(val) {
     if (typeof val === 'boolean') return val;
     if (!val && val !== 0) return false;
@@ -41,29 +35,74 @@ function parseBoolean(val) {
     return (s === 'true' || s === '1' || s === 'sim' || s === 's' || s === 'yes');
 }
 
-/* ---------- leitura/escrita localStorage ---------- */
+/* ---------- Firebase Firestore Setup ---------- */
 
-function carregarViagens() {
-    const raw = localStorage.getItem('viagens');
-    if (!raw) return [];
-    try { return JSON.parse(raw); }
-    catch (err) { console.error('Erro parse viagens', err); return []; }
+// Config Firebase do seu projeto (substitua pelos seus dados reais)
+const firebaseConfig = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "SEU_PROJETO.firebaseapp.com",
+    projectId: "SEU_PROJETO",
+    storageBucket: "SEU_PROJETO.appspot.com",
+    messagingSenderId: "SEU_ID",
+    appId: "SEU_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const viagensCol = db.collection('viagens');
+
+/* ---------- FUNÇÕES FIRESTORE ---------- */
+
+// Carregar todas viagens do Firestore (async)
+async function carregarViagens() {
+    try {
+        const snapshot = await viagensCol.get();
+        const viagens = [];
+        snapshot.forEach(doc => {
+            viagens.push(doc.data());
+        });
+        return viagens;
+    } catch (err) {
+        console.error('Erro ao carregar viagens do Firestore:', err);
+        alert('Erro ao carregar viagens do Firestore.');
+        return [];
+    }
 }
 
-function salvarViagens(viagens) {
-    localStorage.setItem('viagens', JSON.stringify(viagens));
+// Salvar lista de viagens no Firestore (sobrescreve tudo)
+async function salvarViagens(viagens) {
+    try {
+        // Apagar todos documentos existentes
+        const snapshot = await viagensCol.get();
+        const batchDelete = db.batch();
+        snapshot.forEach(doc => batchDelete.delete(doc.ref));
+        await batchDelete.commit();
+
+        // Adicionar todos os novos
+        const batchAdd = db.batch();
+        viagens.forEach(viagem => {
+            const id = viagem.id || db.collection('viagens').doc().id;
+            const docRef = viagensCol.doc(id);
+            batchAdd.set(docRef, { ...viagem, id }); // garante o id salvo no documento
+        });
+        await batchAdd.commit();
+
+        alert('Viagens salvas no Firestore com sucesso!');
+    } catch (err) {
+        console.error('Erro ao salvar viagens no Firestore:', err);
+        alert('Erro ao salvar viagens no Firestore.');
+    }
 }
 
-/* ---------- EXPORTAR CSV / JSON ---------- */
+/* ---------- EXPORTAR CSV ---------- */
 
-function exportarDados() {
-    const viagens = carregarViagens();
+async function exportarDados() {
+    const viagens = await carregarViagens();
     if (!viagens || viagens.length === 0) {
         alert('Não há viagens salvas para exportar.');
         return;
     }
 
-    // montar CSV: cabeçalho
     const headers = ['id', 'nota', 'cte', 'peso', 'statusViagem', 'statusPagamento', 'vale', 'valorFrete', 'dataHoraCadastro', 'ganho'];
     const rows = [headers.join(',')];
 
@@ -102,7 +141,7 @@ function exportarDados() {
     alert(`Exportado ${viagens.length} registros em ${filename}`);
 }
 
-/* ---------- PARSER CSV SIMPLES (suporta aspas e vírgulas dentro de campos) ---------- */
+/* ---------- PARSER CSV ---------- */
 
 function parseCSV(text) {
     const lines = text.split(/\r\n|\n/).filter(l => l.trim() !== '');
@@ -119,7 +158,7 @@ function parseCSV(text) {
             if (ch === '"') {
                 if (inQuotes && line[j + 1] === '"') {
                     cur += '"';
-                    j++; // pula a segunda aspa
+                    j++;
                 } else {
                     inQuotes = !inQuotes;
                 }
@@ -133,7 +172,6 @@ function parseCSV(text) {
         fields.push(cur);
         data.push(fields);
     }
-
     return data;
 }
 
@@ -148,10 +186,8 @@ async function importarDados() {
 
     const file = input.files[0];
     const text = await file.text();
-
     const filename = file.name || 'import';
 
-    // Se JSON
     if (filename.toLowerCase().endsWith('.json')) {
         try {
             const parsed = JSON.parse(text);
@@ -166,13 +202,14 @@ async function importarDados() {
             if (incoming.length === 0) { alert('Arquivo JSON não contém registros.'); return; }
 
             const action = confirm('Deseja SUBSTITUIR todas as viagens existentes? (OK = Substituir, Cancel = Mesclar)');
+            const existentes = await carregarViagens();
+
             if (action) {
-                salvarViagens(incoming);
+                await salvarViagens(incoming);
                 alert(`Importação concluída: substituídos ${incoming.length} registros.`);
             } else {
-                const existentes = carregarViagens();
                 const unidos = existentes.concat(incoming);
-                salvarViagens(unidos);
+                await salvarViagens(unidos);
                 alert(`Importação concluída: mesclados ${incoming.length} registros.`);
             }
 
@@ -238,13 +275,14 @@ async function importarDados() {
         if (incoming.length === 0) { alert('CSV não possui registros válidos.'); input.value = ''; return; }
 
         const action = confirm('Deseja SUBSTITUIR todas as viagens existentes? (OK = Substituir, Cancel = Mesclar)');
+        const existentes = await carregarViagens();
+
         if (action) {
-            salvarViagens(incoming);
+            await salvarViagens(incoming);
             alert(`Importação CSV concluída: ${incoming.length} registros importados (substituídos).`);
         } else {
-            const existentes = carregarViagens();
             const unidos = existentes.concat(incoming);
-            salvarViagens(unidos);
+            await salvarViagens(unidos);
             alert(`Importação CSV concluída: ${incoming.length} registros mesclados.`);
         }
 
@@ -258,6 +296,8 @@ async function importarDados() {
 /* ---------- BACKUP (JSON com todo o localStorage) ---------- */
 
 function fazerBackup() {
+    // Como Firestore não pode ser exportado direto do cliente,
+    // faremos backup do localStorage, se você quiser pode adaptar para Firestore
     const obj = {};
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
@@ -269,10 +309,10 @@ function fazerBackup() {
     alert('Backup gerado e baixado: ' + filename);
 }
 
-/* ---------- ENVIAR RELATÓRIO (tenta navigator.share, senão faz download e instruções) ---------- */
+/* ---------- ENVIAR RELATÓRIO (CSV) ---------- */
 
 async function enviarRelatorio() {
-    const viagens = carregarViagens();
+    const viagens = await carregarViagens();
     if (!viagens || viagens.length === 0) { alert('Não há dados para enviar.'); return; }
 
     const headers = ['id', 'nota', 'cte', 'peso', 'statusViagem', 'statusPagamento', 'vale', 'valorFrete', 'dataHoraCadastro', 'ganho'];
@@ -320,8 +360,8 @@ async function enviarRelatorio() {
 
 /* ---------- EXPORTAR PDF usando jsPDF e autotable ---------- */
 
-function exportarPDF() {
-    const viagens = carregarViagens();
+async function exportarPDF() {
+    const viagens = await carregarViagens();
     if (!viagens || viagens.length === 0) {
         alert('Não há viagens salvas para exportar.');
         return;
@@ -379,17 +419,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('importFile');
     if (input) {
         input.addEventListener('change', () => {
-            const label = input.nextElementSibling;
-            if (input.files.length > 0) {
-                const nome = input.files[0].name;
-                let el = input.parentElement.querySelector('.import-filename');
-                if (!el) {
-                    el = document.createElement('div');
-                    el.className = 'import-filename';
-                    input.parentElement.appendChild(el);
-                }
-                el.textContent = 'Arquivo: ' + nome;
-            }
             importarDados();
         });
     }
