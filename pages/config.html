@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Configurações</title>
+    <link rel="stylesheet" href="../css/home.css" />
+    <link rel="stylesheet" href="../css/config.css" />
+
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- jsPDF e AutoTable para exportar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Menu lateral -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>ControleGeral</h2>
+                <button id="menu-toggle" class="menu-toggle" aria-label="Abrir menu">&#9776;</button>
+            </div>
+
+            <ul class="menu">
+                <li><a href="../home.html">Página Principal</a></li>
+                <li><a href="../pages/lancar_viagem.html">Cadastrar Viagens</a></li>
+                <li><a href="../pages/listar_viagens.html">Listar Viagens</a></li>
+                <li><a href="../pages/relatorio_ganhos.html" class="active">Relatório Ganhos</a></li>
+                <li><a href="../pages/config.html">Configurações</a></li>
+            </ul>
+        </nav>
+
+        <!-- Conteúdo principal -->
+        <main class="content">
+            <h1>Configurações</h1>
+            <p>Gerencie opções do sistema e dados.</p>
+
+            <div class="config-grid">
+                <!-- Exportar Dados CSV -->
+                <div class="config-card">
+                    <i class="fas fa-file-export card-icon"></i>
+                    <h2>Exportar Dados CSV</h2>
+                    <p>Baixe todos os dados do sistema em formato Excel ou CSV.</p>
+                    <button onclick="exportarDados()">Exportar CSV</button>
+                </div>
+
+                <!-- Exportar PDF -->
+                <div class="config-card">
+                    <i class="fas fa-file-pdf card-icon"></i>
+                    <h2>Exportar Dados PDF</h2>
+                    <p>Baixe um relatório em PDF das viagens.</p>
+                    <button onclick="exportarPDF()">Exportar PDF</button>
+                </div>
+
+                <!-- Importar Dados -->
+                <div class="config-card">
+                    <i class="fas fa-file-import card-icon"></i>
+                    <h2>Importar Dados</h2>
+                    <p>Envie arquivos para atualizar ou restaurar dados.</p>
+                    <input type="file" id="importFile" style="display:none" onchange="importarDados()" />
+                    <button onclick="document.getElementById('importFile').click()">Importar</button>
+                </div>
+
+                <!-- Enviar Relatórios -->
+                <div class="config-card">
+                    <i class="fas fa-envelope card-icon"></i>
+                    <h2>Enviar Relatórios</h2>
+                    <p>Envie relatórios por e-mail para clientes ou administradores.</p>
+                    <button onclick="enviarRelatorio()">Enviar</button>
+                </div>
+
+                <!-- Backup Automático -->
+                <div class="config-card">
+                    <i class="fas fa-database card-icon"></i>
+                    <h2>Backup Automático</h2>
+                    <p>Crie ou restaure backups de segurança do sistema.</p>
+                    <button onclick="fazerBackup()">Fazer Backup</button>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/home.js"></script>
+</body>
+
+</html>

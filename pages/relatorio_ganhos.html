@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Relatório de Ganhos - ControleGeral</title>
+
+    <link rel="stylesheet" href="../css/home.css" />
+    <link rel="stylesheet" href="../css/relatorio_ganhos.css" />
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Menu lateral -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>ControleGeral</h2>
+                <button id="menu-toggle" class="menu-toggle" aria-label="Abrir menu">&#9776;</button>
+            </div>
+
+            <ul class="menu">
+                <li><a href="../home.html">Página Principal</a></li>
+                <li><a href="../pages/lancar_viagem.html">Cadastrar Viagens</a></li>
+                <li><a href="../pages/listar_viagens.html">Listar Viagens</a></li>
+                <li><a href="../pages/relatorio_ganhos.html" class="active">Relatório Ganhos</a></li>
+                <li><a href="../pages/config.html">Configurações</a></li>
+            </ul>
+        </nav>
+
+        <!-- Conteúdo principal -->
+        <main class="content">
+            <h1>Relatório de Ganhos</h1>
+
+            <form id="filtroForm" aria-label="Formulário de filtro de relatório" class="filtro-form">
+                <div class="filtro-group">
+                    <label for="dataInicio">Data Início</label>
+                    <input type="date" id="dataInicio" name="dataInicio" />
+                </div>
+                <div class="filtro-group">
+                    <label for="dataFim">Data Fim</label>
+                    <input type="date" id="dataFim" name="dataFim" />
+                </div>
+                <div class="filtro-group">
+                    <label for="statusViagemFiltro">Status da Viagem</label>
+                    <select id="statusViagemFiltro" name="statusViagemFiltro">
+                        <option value="">Todos</option>
+                        <option value="Em Viagem">Em Viagem</option>
+                        <option value="Aguardando Descarga">Aguardando Descarga</option>
+                        <option value="Finalizada">Finalizada</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-filtrar">Aplicar Filtro</button>
+            </form>
+
+            <table id="relatorioTable" aria-label="Tabela de relatório de ganhos">
+                <thead>
+                    <tr>
+                        <th>Nº Nota</th>
+                        <th>Nº CTE</th>
+                        <th>Data / Hora</th>
+                        <th>Peso (Kg)</th>
+                        <th>Status Viagem</th>
+                        <th>Vale</th>
+                        <th>Ganho (R$)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Linhas geradas via JS -->
+                </tbody>
+            </table>
+
+            <div class="total-ganhos" aria-live="polite">
+                Total de Ganhos: <span id="totalGanhos">R$ 0,00</span>
+            </div>
+        </main>
+
+    </div>
+    <script src="../js/home.js"></script>
+    <script src="../js/relatorio_ganhos.js"></script>
+</body>
+
+</html>

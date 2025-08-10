@@ -1,0 +1,121 @@
+/* Lancar_viagem.css - estilo alinhado com a home.css */
+.container {
+    height: auto !important;
+    min-height: 100vh;
+    overflow: visible !important;
+}
+
+/* Container geral do formulário */
+.content {
+    flex-grow: 1;
+    padding: 40px;
+    overflow-y: auto;
+    min-width: 0;
+    background-color: #f4f7fc;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Título da página */
+.content h1 {
+    color: #1e3c72;
+    margin-bottom: 30px;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+/* Grupo dos inputs */
+.input-group {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Labels */
+.input-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1e3c72;
+    font-size: 16px;
+}
+
+/* Inputs e selects */
+.input-group input[type="text"],
+.input-group input[type="number"],
+.input-group select {
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 1.8px solid #ccc;
+    border-radius: 8px;
+    outline-color: #1e3c72;
+    transition: border-color 0.3s ease;
+    background-color: white;
+}
+
+.input-group input[type="text"]:focus,
+.input-group input[type="number"]:focus,
+.input-group select:focus {
+    border-color: #16335f;
+}
+
+/* Checkbox alinhado na horizontal */
+.input-group.checkbox {
+    flex-direction: row;
+    align-items: center;
+}
+
+.input-group.checkbox input[type="checkbox"] {
+    margin-right: 12px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Botão */
+button[type="submit"] {
+    background-color: #1e3c72;
+    color: white;
+    font-size: 20px;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    max-width: 280px;
+}
+
+button[type="submit"]:hover {
+    background-color: #16335f;
+}
+
+
+/* RESPONSIVO */
+
+@media (max-width: 600px) {
+    .content {
+        padding: 20px;
+    }
+
+    .content h1 {
+        font-size: 26px;
+        margin-bottom: 20px;
+    }
+
+    .input-group label {
+        font-size: 14px;
+    }
+
+    .input-group input[type="text"],
+    .input-group input[type="number"],
+    .input-group select {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+
+    button[type="submit"] {
+        font-size: 18px;
+        padding: 12px 20px;
+        max-width: 100%;
+    }
+}

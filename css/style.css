@@ -1,0 +1,69 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Centraliza na tela */
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(120deg, #1e3c72, #2a5298);
+}
+
+/* Caixa do login */
+.login-box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Logo */
+.logo {
+    width: 80px;
+    margin-bottom: 10px;
+}
+
+/* Título */
+.login-box h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Campos de entrada */
+.login-box input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Botão */
+.login-box button {
+    width: 100%;
+    padding: 10px;
+    background: #1e3c72;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-box button:hover {
+    background: #16335f;
+}
+
+/* Mensagem de erro */
+.error {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}

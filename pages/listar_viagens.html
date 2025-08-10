@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Listar Viagens - ControleGeral</title>
+
+    <link rel="stylesheet" href="../css/home.css" />
+    <link rel="stylesheet" href="../css/listar_viagens.css" />
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Menu lateral -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>ControleGeral</h2>
+                <button id="menu-toggle" class="menu-toggle" aria-label="Abrir menu">&#9776;</button>
+            </div>
+
+            <ul class="menu">
+                <li><a href="../home.html">Página Principal</a></li>
+                <li><a href="../pages/lancar_viagem.html">Cadastrar Viagens</a></li>
+                <li><a href="../pages/listar_viagens.html">Listar Viagens</a></li>
+                <li><a href="../pages/relatorio_ganhos.html" class="active">Relatório Ganhos</a></li>
+                <li><a href="../pages/config.html">Configurações</a></li>
+            </ul>
+        </nav>
+
+        <!-- Conteúdo principal -->
+        <main class="content">
+            <h1>Lista de Viagens</h1>
+
+            <div class="action-buttons">
+                <button id="btnEditar" disabled aria-disabled="true">✏️ Editar</button>
+                <button id="btnExcluir" disabled aria-disabled="true">🗑️ Excluir</button>
+            </div>
+
+            <table id="viagensTable" aria-label="Tabela de viagens">
+                <thead>
+                    <tr>
+                        <th>Nº Nota</th>
+                        <th>Nº CTE</th>
+                        <th>Peso (Kg)</th>
+                        <th>Status Viagem</th>
+                        <th>Status Pagamento</th>
+                        <th>Vale</th>
+                        <th>Valor Frete (R$)</th>
+                        <th>Data/Hora Cadastro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Conteúdo gerado pelo JS -->
+                </tbody>
+            </table>
+
+            <!-- Modal para edição -->
+            <div id="modalEdit" class="modal" aria-hidden="true" role="dialog" aria-labelledby="modalTitle"
+                aria-modal="true">
+                <div class="modal-content">
+                    <h2 id="modalTitle">Editar Viagem</h2>
+                    <form id="editForm">
+                        <input type="hidden" id="editIndex" />
+                        <div class="input-group">
+                            <label for="editNota">Número da Nota</label>
+                            <input type="text" id="editNota" required />
+                        </div>
+                        <div class="input-group">
+                            <label for="editCte">Número CTE</label>
+                            <input type="text" id="editCte" required />
+                        </div>
+                        <div class="input-group">
+                            <label for="editPeso">Peso (Kg)</label>
+                            <input type="number" id="editPeso" required min="0" step="0.01" />
+                        </div>
+                        <div class="input-group">
+                            <label for="editStatusViagem">Status da Viagem</label>
+                            <select id="editStatusViagem" required>
+                                <option value="">Selecione</option>
+                                <option value="Em Viagem">Em Viagem</option>
+                                <option value="Aguardando Descarga">Aguardando Descarga</option>
+                                <option value="Finalizada">Finalizada</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="editStatusPagamento">Status do Pagamento</label>
+                            <select id="editStatusPagamento" required>
+                                <option value="">Selecione</option>
+                                <option value="Pago">Pago</option>
+                                <option value="A Receber">A Receber</option>
+                            </select>
+                        </div>
+                        <div class="input-group checkbox">
+                            <input type="checkbox" id="editVale" />
+                            <label for="editVale">Peguei o vale (R$ 80,00 será descontado)</label>
+                        </div>
+                        <div class="modal-actions">
+                            <button type="submit">Salvar</button>
+                            <button type="button" id="cancelEdit">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+    <script src="../js/home.js"></script>
+    <script src="../js/listar_viagens.js"></script>
+</body>
+
+</html>

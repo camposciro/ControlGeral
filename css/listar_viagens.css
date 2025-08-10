@@ -1,0 +1,234 @@
+/* Estilos base para a página listar viagens */
+
+/* Container content já estilizado no home.css */
+/* Apenas ajustar tabela e modal aqui */
+.container {
+    height: auto !important;
+    min-height: 100vh;
+    overflow: visible !important;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+thead tr {
+    background-color: #1e3c72;
+    color: white;
+}
+
+th,
+td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:hover {
+    background-color: #f0f4fb;
+    cursor: pointer;
+}
+
+tbody tr.selected {
+    background-color: #16335f;
+    color: white;
+}
+
+.action-buttons {
+    padding-bottom: 17px;
+    display: flex;
+    gap: 15px;
+    justify-content: flex-start;
+}
+
+.action-buttons button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #1e3c72;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    min-width: 120px;
+}
+
+.action-buttons button:disabled,
+.action-buttons button[aria-disabled="true"] {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+.action-buttons button:hover:not(:disabled) {
+    background-color: #16335f;
+}
+
+/* Modal */
+
+.modal {
+    display: none;
+    /* oculto por padrão */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal[aria-hidden="false"] {
+    display: flex;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #1e3c72;
+    font-weight: bold;
+}
+
+/* Inputs dentro do modal seguem padrão do home.css */
+.input-group {
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #1e3c72;
+}
+
+.input-group input[type="text"],
+.input-group input[type="number"],
+.input-group select {
+    padding: 10px 14px;
+    font-size: 16px;
+    border: 1.8px solid #ccc;
+    border-radius: 8px;
+    outline-color: #1e3c72;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input[type="text"]:focus,
+.input-group input[type="number"]:focus,
+.input-group select:focus {
+    border-color: #16335f;
+}
+
+.input-group.checkbox {
+    flex-direction: row;
+    align-items: center;
+}
+
+.input-group.checkbox input[type="checkbox"] {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Botões modal */
+.modal-actions button {
+    font-size: 18px;
+    font-weight: 700;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-actions button[type="submit"] {
+    background-color: #1e3c72;
+    color: white;
+}
+
+.modal-actions button[type="submit"]:hover {
+    background-color: #16335f;
+}
+
+.modal-actions button[type="button"] {
+    background-color: #ccc;
+}
+
+.modal-actions button[type="button"]:hover {
+    background-color: #999;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 600px) {
+
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    thead tr {
+        display: none;
+    }
+
+    tbody tr {
+        margin-bottom: 15px;
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    tbody tr.selected {
+        background-color: #16335f;
+        color: white;
+    }
+
+    tbody tr td {
+        padding-left: 70%;
+        position: relative;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tbody tr td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        font-weight: 700;
+        color: #1e3c72;
+    }
+
+    .action-buttons {
+        padding-bottom: 17px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .action-buttons button {
+        width: 100%;
+        min-width: auto;
+    }
+}
